@@ -1,4 +1,4 @@
-*pickme.txt*           For Neovim >= 0.8.0          Last change: 2025 April 13
+*pickme.txt*           For Neovim >= 0.8.0          Last change: 2025 April 21
 
 ==============================================================================
 Table of Contents                                   *pickme-table-of-contents*
@@ -47,7 +47,7 @@ Using lazy.nvim <https://github.com/folke/lazy.nvim>
         'folke/snacks.nvim', -- For snacks.picker
         -- 'nvim-telescope/telescope.nvim', -- For telescope
         -- 'ibhagwan/fzf-lua', -- For fzf-lua
-      }
+      },
       opts = {
         picker_provider = 'snacks', -- Default provider
       },
