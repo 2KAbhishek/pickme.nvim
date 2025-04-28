@@ -21,6 +21,7 @@ local M = {}
 ---@field preview_ft? string -- File type for preview content (defaults to 'markdown')
 ---@field selection_handler fun(bufnr:number|nil, selection:table) -- Handler for selection
 ---@field provider_override? string -- Picker provider to use
+---@field action_mapping? table<string, fun(bufnr:number|nil, selection:table)> -- Custom keybindings map
 
 local picker_provider_map = {
     snacks = 'snacks.picker',
