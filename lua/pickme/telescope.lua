@@ -39,8 +39,8 @@ M.custom_picker = function(opts)
                     opts.selection_handler(prompt_bufnr, selection)
                 end)
 
-                if opts.action_mapping then
-                    for key, handler in pairs(opts.action_mapping) do
+                if opts.action_map then
+                    for key, handler in pairs(opts.action_map) do
                         map('i', key, function()
                             local selection = require('telescope.actions.state').get_selected_entry()
                             require('telescope.actions').close(prompt_bufnr)

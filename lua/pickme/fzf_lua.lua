@@ -1,5 +1,42 @@
 local M = {}
 
+---Convert Neovim style keybindings (<C-x>) to fzf style (ctrl-x)
+---@param mapping table<string, function>
+---@return table<string, function>
+local function convert_keybindings(mapping)
+    if not mapping then
+        return {}
+    end
+
+    local converted = {}
+    local keymap = {
+        ['<C-'] = 'ctrl-',
+        ['<A-'] = 'alt-',
+        ['<S-'] = 'shift-',
+        ['<M-'] = 'alt-',
+        ['<CR>'] = 'enter',
+        ['<BS>'] = 'bspace',
+        ['<Tab>'] = 'tab',
+        ['<S-Tab>'] = 'btab',
+        ['<Space>'] = 'space',
+        ['<Up>'] = 'up',
+        ['<Down>'] = 'down',
+        ['<Left>'] = 'left',
+        ['<Right>'] = 'right',
+    }
+
+    for key, handler in pairs(mapping) do
+        local new_key = key
+        for vim_key, fzf_key in pairs(keymap) do
+            new_key = new_key:gsub(vim_key:gsub('%-', '%%%-'), fzf_key)
+        end
+        new_key = new_key:gsub('[<>]', '')
+        converted[new_key] = handler
+    end
+
+    return converted
+end
+
 ---@param opts PickMe.SelectFileOptions
 M.select_file = function(opts)
     require('fzf-lua').fzf_exec(opts.items, {
@@ -49,19 +86,35 @@ M.custom_picker = function(opts)
         end
     end
 
-    require('fzf-lua').fzf_exec(formatted_items, {
-        prompt = opts.title,
-        previewer = CustomPreviewer,
-        actions = {
-            ['default'] = function(selected)
+    local actions = {
+        ['default'] = function(selected)
+            if selected and #selected > 0 then
+                local item = item_map[selected[1]]
+                if item then
+                    opts.selection_handler(nil, { value = item })
+                end
+            end
+        end,
+    }
+
+    if opts.action_map then
+        local converted_actions = convert_keybindings(opts.action_map)
+        for key, handler in pairs(converted_actions) do
+            actions[key] = function(selected)
                 if selected and #selected > 0 then
                     local item = item_map[selected[1]]
                     if item then
-                        opts.selection_handler(nil, { value = item })
+                        handler(nil, { value = item })
                     end
                 end
-            end,
-        },
+            end
+        end
+    end
+
+    require('fzf-lua').fzf_exec(formatted_items, {
+        prompt = opts.title,
+        previewer = CustomPreviewer,
+        actions = actions,
     })
 end
 
