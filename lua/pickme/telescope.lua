@@ -32,12 +32,22 @@ M.custom_picker = function(opts)
                     vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, vim.split(repo_info, '\n'))
                 end,
             }),
-            attach_mappings = function(prompt_bufnr, _)
+            attach_mappings = function(prompt_bufnr, map)
                 require('telescope.actions').select_default:replace(function()
                     local selection = require('telescope.actions.state').get_selected_entry()
                     require('telescope.actions').close(prompt_bufnr)
                     opts.selection_handler(prompt_bufnr, selection)
                 end)
+
+                if opts.action_mapping then
+                    for key, handler in pairs(opts.action_mapping) do
+                        map('i', key, function()
+                            local selection = require('telescope.actions.state').get_selected_entry()
+                            require('telescope.actions').close(prompt_bufnr)
+                            handler(prompt_bufnr, selection)
+                        end)
+                    end
+                end
                 return true
             end,
         })
