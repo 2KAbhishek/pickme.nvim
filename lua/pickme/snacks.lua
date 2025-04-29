@@ -16,7 +16,7 @@ end
 
 ---@param opts PickMe.CustomPickerOptions
 M.custom_picker = function(opts)
-    require('snacks.picker').pick({
+    local picker_config = {
         items = vim.tbl_map(function(item)
             return {
                 text = opts.entry_maker(item).display,
@@ -38,7 +38,28 @@ M.custom_picker = function(opts)
                 end
             end,
         },
-    })
+    }
+
+    if opts.action_map then
+        picker_config.win = picker_config.win or {}
+        picker_config.win.input = picker_config.win.input or {}
+        picker_config.win.input.keys = picker_config.win.input.keys or {}
+
+        for key, handler in pairs(opts.action_map) do
+            local action_name = 'custom_action_' .. key:gsub('[<>%-]', '_')
+
+            picker_config.actions[action_name] = function(picker, selected)
+                if selected and selected.value then
+                    vim.cmd('close')
+                    handler(nil, { value = selected.value })
+                end
+            end
+
+            picker_config.win.input.keys[key] = { action_name, mode = { 'i', 'n' } }
+        end
+    end
+
+    require('snacks.picker').pick(picker_config)
 end
 
 M.command_map = function()
