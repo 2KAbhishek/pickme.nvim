@@ -37,6 +37,22 @@ local function convert_keybindings(mapping)
     return converted
 end
 
+---Assign an action to a key in the actions table
+---@param actions table<string, function>
+---@param key string
+---@param item_map table<string, any>
+---@param handler function
+local function assign_action(actions, key, item_map, handler)
+    actions[key] = function(selected)
+        if selected and #selected > 0 then
+            local item = item_map[selected[1]]
+            if item then
+                handler(nil, { value = item })
+            end
+        end
+    end
+end
+
 ---@param opts PickMe.SelectFileOptions
 M.select_file = function(opts)
     require('fzf-lua').fzf_exec(opts.items, {
@@ -86,28 +102,13 @@ M.custom_picker = function(opts)
         end
     end
 
-    local actions = {
-        ['default'] = function(selected)
-            if selected and #selected > 0 then
-                local item = item_map[selected[1]]
-                if item then
-                    opts.selection_handler(nil, { value = item })
-                end
-            end
-        end,
-    }
+    local actions = {}
+    assign_action(actions, 'default', item_map, opts.selection_handler)
 
     if opts.action_map then
         local converted_actions = convert_keybindings(opts.action_map)
         for key, handler in pairs(converted_actions) do
-            actions[key] = function(selected)
-                if selected and #selected > 0 then
-                    local item = item_map[selected[1]]
-                    if item then
-                        handler(nil, { value = item })
-                    end
-                end
-            end
+            assign_action(actions, key, item_map, handler)
         end
     end
 
