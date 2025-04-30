@@ -198,9 +198,16 @@ pickme.custom_picker({
     return "Preview content for " .. item
   end,
   preview_ft = 'markdown',
+  -- Action to perform on selection / when <CR> is pressed
   selection_handler = function(_, selection)
     print("Selected: " .. selection.value)
-  end
+  end,
+  -- Optional custom actions mapped to keys
+  action_map = {
+    ['<C-s>'] = function(_, selection)
+      vim.notify("Selection: " .. selection.value)
+    end
+  }
 })
 ```
 
