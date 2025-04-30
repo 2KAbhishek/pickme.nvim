@@ -1,5 +1,14 @@
 local M = {}
 
+---Calls assigned action for the selected entry
+---@param handler function
+---@param prompt_bufnr number
+local function call_action(handler, prompt_bufnr)
+    local selection = require('telescope.actions.state').get_selected_entry()
+    require('telescope.actions').close(prompt_bufnr)
+    handler(prompt_bufnr, selection)
+end
+
 ---@param opts PickMe.SelectFileOptions
 M.select_file = function(opts)
     require('telescope.pickers')
@@ -32,19 +41,15 @@ M.custom_picker = function(opts)
                     vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, vim.split(repo_info, '\n'))
                 end,
             }),
-            attach_mappings = function(prompt_bufnr, map)
+            attach_mappings = function(prompt_bufnr, keymap)
                 require('telescope.actions').select_default:replace(function()
-                    local selection = require('telescope.actions.state').get_selected_entry()
-                    require('telescope.actions').close(prompt_bufnr)
-                    opts.selection_handler(prompt_bufnr, selection)
+                    call_action(opts.selection_handler, prompt_bufnr)
                 end)
 
                 if opts.action_map then
                     for key, handler in pairs(opts.action_map) do
-                        map('i', key, function()
-                            local selection = require('telescope.actions.state').get_selected_entry()
-                            require('telescope.actions').close(prompt_bufnr)
-                            handler(prompt_bufnr, selection)
+                        keymap('i', key, function()
+                            call_action(handler, prompt_bufnr)
                         end)
                     end
                 end

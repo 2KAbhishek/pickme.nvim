@@ -1,5 +1,18 @@
 local M = {}
 
+---Assign an action to a key in the actions table
+---@param actions table<string, function>
+---@param key string
+---@param handler function
+local function assign_action(actions, key, handler)
+    actions[key] = function(_, selected)
+        if selected and selected.value then
+            vim.cmd('close')
+            handler(nil, { value = selected.value })
+        end
+    end
+end
+
 ---@param opts PickMe.SelectFileOptions
 M.select_file = function(opts)
     require('snacks.picker').pick({
@@ -30,31 +43,16 @@ M.custom_picker = function(opts)
         title = opts.title,
         format = Snacks.picker.format.text,
         preview = 'preview',
-        actions = {
-            confirm = function(_, selected)
-                if selected and selected.value then
-                    vim.cmd('close')
-                    opts.selection_handler(nil, { value = selected.value })
-                end
-            end,
-        },
+        actions = {},
+        win = { input = { keys = {} } },
     }
 
+    assign_action(picker_config.actions, 'confirm', opts.selection_handler)
     if opts.action_map then
-        picker_config.win = picker_config.win or {}
-        picker_config.win.input = picker_config.win.input or {}
-        picker_config.win.input.keys = picker_config.win.input.keys or {}
-
         for key, handler in pairs(opts.action_map) do
             local action_name = 'custom_action_' .. key:gsub('[<>%-]', '_')
 
-            picker_config.actions[action_name] = function(picker, selected)
-                if selected and selected.value then
-                    vim.cmd('close')
-                    handler(nil, { value = selected.value })
-                end
-            end
-
+            assign_action(picker_config.actions, action_name, handler)
             picker_config.win.input.keys[key] = { action_name, mode = { 'i', 'n' } }
         end
     end
