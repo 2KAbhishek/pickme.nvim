@@ -129,7 +129,12 @@ M.setup = function()
         add_keymap(
             '<leader>ecP',
             ':lua require("pickme").pick("files", { cwd = vim.fn.stdpath("data") .. "/lazy", title = "Plugin Files" })<cr>',
-            'Plugin Files'
+            'Neovim Plugins'
+        )
+        add_keymap(
+            '<leader>ecL',
+            ':lua require("pickme").pick("files", { cwd = vim.fn.stdpath("state"), title = "Log Files" })<cr>',
+            'Neovim Logs'
         )
     end
 end
