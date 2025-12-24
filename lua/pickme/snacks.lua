@@ -75,7 +75,6 @@ M.command_map = function()
         git_branches = 'git_branches',
         git_commits = 'git_log',
         git_files = 'git_files',
-        git_log = 'git_bcommits',
         git_log_file = 'git_log_file',
         git_log_line = 'git_log_line',
         git_stash = 'git_stash',
