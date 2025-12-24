@@ -136,7 +136,6 @@ telescope, fzf_lua):
 SNACKS PICKERS ~
 
 - `cliphist` - Browse clipboard history
-- `git_log` - View detailed git log
 - `grep_buffers` - Search across all open buffers
 - `icons` - Browse and insert icons
 - `lazy` - Search through lazy.nvim plugin specs
@@ -229,7 +228,6 @@ will be automatically configured:
   <C-f>             files                   Files
   <leader>fa        files                   Find Files
   <leader>fb        buffers                 Buffers
-  <leader>fc        git_log_file            File Commits
   <leader>fd        projects                Project Dirs
   <leader>ff        git_files               Find Git Files
   <leader>fg        live_grep               Grep
@@ -244,10 +242,10 @@ will be automatically configured:
   <leader>fu        undo                    Undo History
   <leader>fw        grep_string             Word Grep
   <leader>fz        zoxide                  Zoxide
-  <leader>gL        git_log                 Git Log
   <leader>gS        git_stash               Git Stash
   <leader>gc        git_commits             Git Commits
-  <leader>gl        git_log_line            Git Log Line
+  <leader>gf        git_log_file            File Commits
+  <leader>gl        git_log_line            Line Commits
   <leader>gs        git_branches            Git Branches
   <leader>ii        icons                   Icons
   <leader>ir        registers               Registers
