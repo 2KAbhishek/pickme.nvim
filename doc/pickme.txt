@@ -1,4 +1,4 @@
-*pickme.txt*           For Neovim >= 0.8.0           Last change: 2025 July 21
+*pickme.txt*         For Neovim >= 0.8.0         Last change: 2025 December 24
 
 ==============================================================================
 Table of Contents                                   *pickme-table-of-contents*
@@ -35,7 +35,7 @@ SETUP                                               *pickme-pickme.nvim-setup*
 
 INSTALLATION ~
 
-Using lazy.nvim <https://github.com/folke/lazy.nvim>
+Using lazy.nvim <https://github.com/folke/lazy.nvim>:
 
 >lua
     {
