@@ -1,5 +1,5 @@
 *pickme.txt*
-                              For Neovim >= 0.8.0    Last change: 2026 June 12
+                            For Neovim >= 0.8.0    Last change: 2026 August 09
 
 ==============================================================================
 Table of Contents                                   *pickme-table-of-contents*
